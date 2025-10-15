@@ -33,6 +33,7 @@ namespace FormElements
             this.Text = "Vorm elementidega";
             tree = new TreeView();
             tree.Dock = DockStyle.Left;
+            tree.Width = 145;
             tree.AfterSelect += Tree_AfterSelect;
             TreeNode tn = new TreeNode("Elemendid");
             tn.Nodes.Add(new TreeNode("Nupp"));
@@ -43,15 +44,9 @@ namespace FormElements
             tn.Nodes.Add(new TreeNode("Tekstkast-TextBox"));
             tn.Nodes.Add(new TreeNode("Kaart"));
             tn.Nodes.Add(new TreeNode("MessageBox"));
-            tn.Nodes.Add(new TreeNode("ListBox")); 
+            tn.Nodes.Add(new TreeNode("ListBox"));
             tn.Nodes.Add(new TreeNode("DataGridView"));
-            tn.Nodes.Add(new TreeNode("PictureBox(ul1)"));
-            tn.Nodes.Add(new TreeNode("Checkbox(ul2)"));
-            tn.Nodes.Add(new TreeNode("RadioButton(ul3)"));
-            tn.Nodes.Add(new TreeNode("MessageBox(ul4)"));
-            tn.Nodes.Add(new TreeNode("TabControl(ul5)"));
-            tn.Nodes.Add(new TreeNode("ListBox(ul6)"));
-            tn.Nodes.Add(new TreeNode("MainMenu(File(ul7))"));
+            tn.Nodes.Add(new TreeNode("MainMenu"));
             
             //nupp
             btn = new Button();
@@ -76,19 +71,10 @@ namespace FormElements
             pic.Image = Image.FromFile(@"..\..\Images\close_box_red.png");           
             pic.DoubleClick += Pic_DoubleClick;
 
-            picture = new PictureBox();
-            picture.Size = new Size(100, 100);
-            picture.Location = new Point(150, 60);
-            picture.SizeMode = PictureBoxSizeMode.StretchImage;
-            picture.Image = Image.FromFile(@"..\..\Images\stich.png");
-            picture.DoubleClick += Picture;
-
             tree.Nodes.Add(tn);
             this.Controls.Add(tree);
         }
         int click = 0;
-        //1 Ulesane Изображения появляются в PictureBox
-        //в случайном порядке или одно за другим. Триггером может быть двойной щелчок.
         private void Pic_DoubleClick(object sender, EventArgs e)
         {   //Double_Click -> carusel (3-4 images) 1-2-3-4-1-2-3-4-... 
             string[] images = { "esimene.jpg", "teine.jpg", "kolmas.jpg" };
@@ -132,7 +118,17 @@ namespace FormElements
         {
             if (e.Node.Text=="Nupp")
             {
-                this.Controls.Add(btn);
+                if(Controls.Contains(btn))
+                {
+                    Controls.Remove(btn);
+                    Refresh();
+                }
+                else
+                {
+                    Controls.Add(btn);
+                    btn.BringToFront();
+                }
+                tree.SelectedNode = null;
             }
             else if (e.Node.Text== "Silt")
             {
@@ -142,8 +138,6 @@ namespace FormElements
             {
                 this.Controls.Add(pic);
             }
-            //2 Ulesanne Флажки – не менее 4.
-            //Их можно использовать для включения/выключения функции формы или объекта.
             else if (e.Node.Text == "Märkeruut")
             {
                 c_btn1 = new CheckBox();
@@ -158,9 +152,6 @@ namespace FormElements
                 this.Controls.Add(c_btn1);
                 this.Controls.Add(c_btn2);
             }
-            //Переключатели RadioButtons – не менее двух, например,
-            //для переключения между тёмной и светлой темами.
-            //Переключатели должны работать по единому принципу.
             else if (e.Node.Text == "Radionupp")
             {
                 r_btn1 = new RadioButton();
@@ -174,7 +165,6 @@ namespace FormElements
                 r_btn1.CheckedChanged += new EventHandler(r_btn_Checked);
                 r_btn2.CheckedChanged += new EventHandler(r_btn_Checked);
             }
-            //MessageBox – добавьте собственное диалоговое окно.
             else if (e.Node.Text== "MessageBox")
             {
                 MessageBox.Show("MessageBox", "Kõige lihtsam aken");
@@ -214,8 +204,6 @@ namespace FormElements
 //                tabC.Selected += TabC_Selected;
 //                tabC.DoubleClick += TabC_DoubleClick;
 //            }
-            //ListBox – не менее 5 элементов; 
-            //каждый выбор должен вызывать действие(например, изменение цвета формы).
             else if(e.Node.Text == "ListBox")
             {
                 lb = new ListBox();
@@ -242,101 +230,6 @@ namespace FormElements
                 dg.DataMember = "food";
                 this.Controls.Add(dg);
             }
-            else if (e.Node.Text == "PictureBox(ul1)")
-            {
-                this.Controls.Add(picture);
-            }
-            else if (e.Node.Text == "Checkbox(ul2)")
-            {
-                c_btn1 = new CheckBox();
-                c_btn1.Text = "Vali mind";
-                c_btn1.Size = new Size(c_btn1.Text.Length * 2, 2);
-                c_btn1.Location = new Point(310, 420);
-                c_btn1.CheckedChanged += C_btn1_CheckedChanged;
-                c_btn2 = new CheckBox();
-                c_btn2.Size = new Size(100, 100);
-                c_btn2.Image = Image.FromFile(@"..\..\Images\about.png");
-                c_btn2.Location = new Point(310, 450);
-                this.Controls.Add(c_btn1);
-                this.Controls.Add(c_btn2);
-            }
-            else if (e.Node.Text == "RadioButton(ul3)")
-            {
-                r_btn1 = new RadioButton();
-                r_btn1.Text = "Must teema";
-                r_btn1.Location = new Point(200, 420);
-                r_btn2 = new RadioButton();
-                r_btn2.Text = "Valge teema";
-                r_btn2.Location = new Point(200, 440);
-                this.Controls.Add(r_btn1);
-                this.Controls.Add(r_btn2);
-                r_btn1.CheckedChanged += new EventHandler(r_btn_Checked);
-                r_btn2.CheckedChanged += new EventHandler(r_btn_Checked);
-            }
-            else if (e.Node.Text == "MessageBox(ul4)")
-            {
-                MessageBox.Show("MessageBox", "Kõige lihtsam aken");
-                var answer = MessageBox.Show("Tahad InputBoxi näha?", "Aken koos nupudega", MessageBoxButtons.YesNo);
-                if (answer == DialogResult.Yes)
-                {
-                    string text = Interaction.InputBox("Sisesta siia mingi tekst", "InputBox", "Mingi tekst");
-                    if (MessageBox.Show("Kas tahad tekst saada Tekskastisse?", "Teksti salvestamine", MessageBoxButtons.OKCancel) == DialogResult.OK)
-                    {
-                        lbl.Text = text;
-                        Controls.Add(lbl);
-                    }
-                    else
-                    {
-                        lbl.Text = "Siis mina lisan oma teksti!";
-                        Controls.Add(lbl);
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Veel MessageBox", "Kõige lihtsam aken");
-                }
-            }
-            else if (e.Node.Text == "TabControl(ul5)")
-            {
-                tabC = new TabControl();
-                tabC.Location = new Point(450, 50);
-                tabC.Size = new Size(300, 200);
-                tabP1 = new TabPage("TTHK");
-                WebBrowser wb = new WebBrowser();
-                wb.Url = new Uri("https://www.tthk.ee/");
-                tabP1.Controls.Add(wb);
-                tabP2 = new TabPage("Teine");
-                //Teeme ise!
-                tabP3 = new TabPage("+");
-                tabP3.DoubleClick += TabP3_DoubleClick;
-                tabC.Controls.Add(tabP1);
-                tabC.Controls.Add(tabP2);
-                tabC.Controls.Add(tabP3);
-                this.Controls.Add(tabC);
-                tabC.Selected += TabC_Selected;
-                tabC.DoubleClick += TabC_DoubleClick;
-            }
-            else if (e.Node.Text == "ListBox(ul6)")
-            {
-                lb = new ListBox();
-                lb.Items.Add("Roheline");
-                lb.Items.Add("Punane");
-                lb.Items.Add("Sinine");
-                lb.Items.Add("Hall");
-                lb.Items.Add("Kollane");
-                lb.Location = new Point(150, 120);
-                lb.SelectedIndexChanged += new EventHandler(ls_SelectedIndexChanged);
-                this.Controls.Add(lb);
-            }
-            //Меню – добавьте два своих пункта в меню Файл .
-            else if (e.Node.Text == "MainMenu")
-            {
-                MainMenu menu = new MainMenu();
-                MenuItem menuFile = new MenuItem("File");
-                menuFile.MenuItems.Add("Exit", new EventHandler(menuFile_Exit_Select));
-                menu.MenuItems.Add(menuFile);
-                this.Menu = menu;
-            }
         }
 
         private void menuFile_Exit_Select(object sender, EventArgs e)
@@ -360,11 +253,6 @@ namespace FormElements
         {
             //this.tabC.TabPages.Clear();
             this.tabC.TabPages.Remove(tabC.SelectedTab);
-        }
-        
-        private void Form1_Load(object sender, EventArgs e)
-        {
-           
         }
 
         private void TabC_DoubleClick(object sender, EventArgs e)
@@ -408,60 +296,6 @@ namespace FormElements
                 c_btn1.Text = "Suurendame";
                 c_btn1.Font = new Font("Arial", 36, FontStyle.Regular);
                 t = true;}            
-        }
-        //Ulesanned
-        private void Picture(object sender, EventArgs e)
-        {   //Double_Click -> carusel (3-4 images) 1-2-3-4-1-2-3-4-... 
-            string[] images = { "esimene.jpg", "teine.jpg", "kolmas.jpg" };
-            string fail = images[click];
-            pic.Image = Image.FromFile(@"..\..\Images\" + fail);
-            click++;
-            if (click == 3) { click = 0; }
-        }
-        private void CheckBox(object sender, EventArgs e)
-        {
-            if (t)
-            {
-                this.Size = new Size(1000, 1000);
-                pic.BorderStyle = BorderStyle.Fixed3D;
-                c_btn1.Text = "Teeme väiksem";
-                c_btn1.Font = new Font("Arial", 36, FontStyle.Bold);
-                t = false;
-            }
-            else
-            {
-                this.Size = new Size(700, 500);
-                c_btn1.Text = "Suurendame";
-                c_btn1.Font = new Font("Arial", 36, FontStyle.Regular);
-                t = true;
-            }
-        }
-        private void Radio(object sender, EventArgs e)
-        {
-            if (r_btn1.Checked)
-            {
-                this.BackColor = Color.Black;
-                r_btn2.ForeColor = Color.White;
-                r_btn1.ForeColor = Color.White;
-            }
-            else if (r_btn2.Checked)
-            {
-                this.BackColor = Color.White;
-                r_btn2.ForeColor = Color.Black;
-                r_btn1.ForeColor = Color.Black;
-            }
-        }
-
-        private void ListBox(object sender, EventArgs e)
-        {
-            switch (lb.SelectedItem.ToString())
-            {
-                case ("Sinine"): tree.BackColor = Color.Blue; break;
-                case ("Kollane"): tree.BackColor = Color.Yellow; break;
-                case ("Punane"): tree.BackColor = Color.Red; break;
-                case ("Hall"): tree.BackColor = Color.Gray; break;
-                case ("Roheline"): tree.BackColor = Color.Green; break;
-            }
         }
     }
 }
