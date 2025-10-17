@@ -201,6 +201,7 @@ namespace FormElements
                 tabC.Controls.Add(tabP2);
                 tabC.Controls.Add(tabP3);
                 this.Controls.Add(tabC);
+
             }
             else if (e.Node.Text == "ListBox")
             {
