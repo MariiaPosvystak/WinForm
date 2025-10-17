@@ -97,6 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\about.png" />
+    <Content Include="Images\b.png" />
     <Content Include="Images\close_box_red.png" />
     <Content Include="Images\esimene.jpg" />
     <Content Include="Images\kass.png" />
